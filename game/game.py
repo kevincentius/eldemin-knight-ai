@@ -53,15 +53,8 @@ class Game:
 		shuffle(playable_tiles)
 		return playable_tiles
 
-	def play(self, target_pos, tile):
-		start_pos = self.player_pos
-
-		# place tile in board
-		self.board[target_pos[0]][target_pos[1]] = self.tile_queue[tile]
-
-		# check clear
-		check_color = self.tile_queue[tile]
-		check_list = [target_pos]
+	def get_connected_tiles(self, pos, color):
+		check_list = [pos]
 		con_list = []
 
 		while len(check_list) > 0:
@@ -70,8 +63,20 @@ class Game:
 			
 			for con in self.connect_matrix:
 				con_pos = [check_pos[0] + con[0], check_pos[1] + con[1]]
-				if self._is_inside(con_pos) and self.board[con_pos[0]][con_pos[1]] == check_color and con_pos not in con_list and con_pos not in check_list:
+				if self._is_inside(con_pos) and self.board[con_pos[0]][con_pos[1]] == color and con_pos not in con_list and con_pos not in check_list:
 					check_list.append(con_pos)
+		
+		return con_list
+
+	def play(self, target_pos, tile):
+		start_pos = self.player_pos
+
+		# place tile in board
+		color = self.tile_queue[tile]
+		self.board[target_pos[0]][target_pos[1]] = color
+
+		# check clear
+		con_list = self.get_connected_tiles(target_pos, color)
 		
 		if len(con_list) >= self.cluster_size:
 			for con_pos in con_list:
@@ -89,7 +94,7 @@ class Game:
 		# update stats
 		self.num_moves += 1
 
-		return (start_pos, target_pos, tile, check_color, con_list)
+		return (start_pos, target_pos, tile, color, con_list)
 
 	def undo(self, move):
 		start_pos, target_pos, tile, check_color, con_list = move
