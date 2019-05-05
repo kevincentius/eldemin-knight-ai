@@ -20,9 +20,10 @@ def count_adj(game: Game, pos: list, color: int):
 	for conn in game.connect_matrix:
 		adj_pos = [pos[0] + conn[0], pos[1] + conn[1]]
 		if game.is_inside(adj_pos):
-			if game.board[adj_pos[0], adj_pos[1]] == color:
+			adj_color = game.board[adj_pos[0], adj_pos[1]]
+			if adj_color == color:
 				count_match += 1
-			else:
+			elif adj_color != 0:
 				count_mismatch += 1
 		else:
 			count_wall += 1
@@ -105,6 +106,12 @@ def count_liberties(game: Game, cluster: list, color: int):
 	
 	return count_liberty, count_blocked
 
+def get_cluster_score(size):
+	if size <= 5:
+		return [0, 0, 1, 2, 3.5, 5][size]
+	else:
+		return 5 + 1.5 * (size - 5)
+
 def eval_move(game: Game, target_pos: list, tile: int):
 	color = game.tile_queue[tile]
 	cluster = game.get_connected_tiles(target_pos, color)
@@ -113,11 +120,12 @@ def eval_move(game: Game, target_pos: list, tile: int):
 	count_match, count_mismatch, count_wall = count_adj(game, target_pos, color)
 
 	score = (
-		len(cluster)
+		get_cluster_score(len(cluster))
 		+ 0.75 * diag_unobstructed_count
 		+ 0.5 * diag_half_obstructed_count
-#		- 0.25 * count_mismatch
-#		- 2 * diag_obstructing_count
+		- 0.75 * count_mismatch
+		- 1 * diag_obstructing_count
+		+ 0.2 * math.log10(count_legal_two_steps(game, target_pos)+1)
 	)
 
 	# bonus for connecting clusters with low liberty

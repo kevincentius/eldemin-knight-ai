@@ -6,7 +6,8 @@ from ai.move_eval import eval_move
 
 class TreeSearch:
 
-	move_weights = [1, 0.7, 0.49, 0.343]
+	exp = 0.7
+	move_weights = [1, exp, exp*exp, exp*exp*exp]
 
 	# returns (targetPos, tile), score
 	def find_best_move(self, game: Game, depth: int, scores=[]):

@@ -5,6 +5,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.properties import ObjectProperty, StringProperty
+from kivy.clock import Clock
 
 from game.game import Game
 from ai.tree_search import TreeSearch
@@ -21,6 +22,8 @@ game.num_colors = 6
 tree_search = TreeSearch()
 
 game.reset()
+
+mv = None
 
 
 
@@ -41,6 +44,9 @@ class MainView(BoxLayout):
         self.float_buttons = []
         self.next_buttons = []
         self.build()
+
+        global mv
+        mv = self
 
     def build(self):
         for i in range(49):
@@ -81,7 +87,7 @@ class MainView(BoxLayout):
         self.label_update.text = str(game.num_moves)
 
     def make_move(self):
-        best_move, best_tile, best_score, legal_moves = tree_search.find_best_move(game, 3)
+        best_move, best_tile, best_score, legal_moves = tree_search.find_best_move(game, 4)
         if len(legal_moves) > 0:
             game.play(best_move, best_tile)
         
@@ -90,11 +96,12 @@ class MainView(BoxLayout):
         game.reset()
         self.update()
     def make_start(self):
-        pass
+        Clock.schedule_interval(clock_f, 0.25)
     def make_pause(self):
-        pass
+        Clock.unschedule(clock_f)
 
-    
+def clock_f(dt):
+    mv.make_move()
 
 class GameApp(App):
     def build(self):
