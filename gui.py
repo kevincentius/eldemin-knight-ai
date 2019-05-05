@@ -58,7 +58,7 @@ class MainView(BoxLayout):
             self.grid_name.add_widget(float_button)
 
         for i in range(5):
-            next_button = Button(background_normal='')
+            next_button = Button(background_normal='', size_hint=(None,None), size=(50, 50))
             self.next_buttons.append(next_button)
             self.box_name.add_widget(next_button)
 
