@@ -44,7 +44,7 @@ class Game:
 		legal_moves = []
 		for move in self.move_matrix:
 			target_pos = [self.player_pos[0] + move[0], self.player_pos[1] + move[1]]
-			if self._is_inside(target_pos) and self.board[target_pos[0], target_pos[1]] == 0:
+			if self.is_inside(target_pos) and self.board[target_pos[0], target_pos[1]] == 0:
 				legal_moves.append(target_pos)
 		return legal_moves
 	
@@ -63,7 +63,7 @@ class Game:
 			
 			for con in self.connect_matrix:
 				con_pos = [check_pos[0] + con[0], check_pos[1] + con[1]]
-				if self._is_inside(con_pos) and self.board[con_pos[0]][con_pos[1]] == color and con_pos not in con_list and con_pos not in check_list:
+				if self.is_inside(con_pos) and self.board[con_pos[0]][con_pos[1]] == color and con_pos not in con_list and con_pos not in check_list:
 					check_list.append(con_pos)
 		
 		return con_list
@@ -120,5 +120,5 @@ class Game:
 		# remove tile from board
 		self.board[target_pos[0]][target_pos[1]] = 0
 
-	def _is_inside(self, pos):
+	def is_inside(self, pos):
 		return pos[0] >= 0 and pos[0] < self.board_size[0] and pos[1] >= 0 and pos[1] < self.board_size[1]
