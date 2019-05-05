@@ -22,8 +22,6 @@ class TreeSearch:
 				playable_tiles = list(range(game.active_size))
 				shuffle(playable_tiles)
 				for tile in playable_tiles:
-					test_queue = game.tile_queue.copy()
-
 					# play move
 					scores.append(eval_move(game, move, tile))
 					hist_move = game.play(move, tile)
