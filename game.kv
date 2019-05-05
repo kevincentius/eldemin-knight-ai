@@ -1,0 +1,33 @@
+<MainView>:
+    box_name: box
+    grid_name: grid
+    label_update: move_num
+    spacing: 5
+    GridLayout:
+        spacing:2
+        id: grid
+        cols:7
+        rows:7
+    BoxLayout:
+
+        spacing:10
+        id: box
+        orientation: "vertical"
+        size_hint: 0.1, 1
+
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 0.2, 1
+        spacing: 200
+        Label:
+            id: move_num
+
+        Button:
+            text: "Move"
+            on_press: root.make_move()
+            background_color: (1.0, 0.0, 0.0, 1.0)
+            background_normal: ''
+
+
+    
+
