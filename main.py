@@ -14,10 +14,12 @@ game.num_colors = 5
 tree_search = TreeSearch()
 
 # Search Rules
-weights = [1, 0, 0, 0, 0, 0, 0] # [1, 0, 0, 0, 0.2, 0, 0.5]
+weights = [1, 0, 0, 0, 0, 0, 0]
 num_sims = 50
 
-test_change = 0.2
+# bug result [0.5208, 0.22800000000000012, -0.030800000000000056, -0.026399999999999972, -0.21080000000000013, -0.14820000000000008, 0.24639999999999995]
+
+test_change = 0.1
 change_rate = 0.002
 max_change = 0.05
 
@@ -27,10 +29,7 @@ def simulate(weights):
 		game.reset()
 
 		for n_moves in range(1000):
-			game.print()
-			input()
-
-			best_move, best_tile, best_score, legal_moves = tree_search.find_best_move(game, weights, 4)
+			best_move, best_tile, best_score, legal_moves = tree_search.find_best_move(game, weights, 1)
 
 			if len(legal_moves) > 0:
 				game.play(best_move, best_tile)
@@ -38,9 +37,6 @@ def simulate(weights):
 			else:
 				break
 	
-		game.print()
-		input()
-		
 		num_moves.append(game.num_moves)
 
 		# print('round: {}, avg: {:.2f}, moves: {}'.format(

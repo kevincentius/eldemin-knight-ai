@@ -22,6 +22,8 @@ class TreeSearch:
 				playable_tiles = list(range(game.active_size))
 				shuffle(playable_tiles)
 				for tile in playable_tiles:
+					test_queue = game.tile_queue.copy()
+
 					# play move
 					scores.append(eval_move(game, move, tile, weights))
 					hist_move = game.play(move, tile)
@@ -36,6 +38,7 @@ class TreeSearch:
 					# undo move
 					game.undo(hist_move)
 					scores.pop()
+					
 			return best_move, best_tile, best_score, legal_moves
 
 		else:

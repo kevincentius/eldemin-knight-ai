@@ -106,7 +106,6 @@ class Game:
 		self.player_pos = start_pos
 
 		# update tile queue
-		self.tile_queue[tile] = self.tile_queue[self.active_size]
 		for i in reversed(range(self.active_size, self.queue_size - 1)):
 			self.tile_queue[i+1] = self.tile_queue[i]
 		self.tile_queue[self.active_size] = self.tile_queue[tile]
