@@ -86,6 +86,14 @@ class MainView(BoxLayout):
             game.play(best_move, best_tile)
         
         self.update()
+    def make_reset(self):
+        game.reset()
+        self.update()
+    def make_start(self):
+        pass
+    def make_pause(self):
+        pass
+
     
 
 class GameApp(App):

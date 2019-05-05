@@ -25,12 +25,34 @@
             Label:
                 id: move_num
 
-        Button:
-            text: "Move"
-            on_press: root.make_move()
-            background_color: (1.0, 0.0, 0.0, 1.0)
-            background_normal: ''
+        BoxLayout:
+            orientation:"vertical"
+            Button:
+                font_size: 30
+                text: "Move"
+                on_press: root.make_move()
+                background_color: (1.0, 0.0, 0.0, 1.0)
+                background_normal: ''
 
+            Button:
+                font_size: 30
+                text: "Reset"
+                on_press: root.make_reset()
+                background_color: (0.0, 1.0, 0.0, 1.0)
+                background_normal: ''
 
+            Button:
+                font_size: 30
+                text: "Start"
+                on_press: root.make_start()
+                background_color: (1.0, 1.0, 0.0, 0.1)
+                background_normal: ''
+
+            Button:
+                font_size: 30
+                text: "Pause"
+                on_press: root.make_pause()
+                background_color: (0, 0, 1, 0.3)
+                background_normal: ''
     
 
