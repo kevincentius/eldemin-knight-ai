@@ -28,6 +28,20 @@ def count_adj(game: Game, pos: list, color: int):
 			count_wall += 1
 	return count_match, count_mismatch, count_wall
 
+# def count_diag(game: Game, pos: list, color: int):
+# 	diag_count = 0
+# 	for dx in [-1, 1]:
+# 		for dy in [-1, 1]:
+# 			adj_pos = [pos[0] + dx, pos[1] + dy]
+# 			if game.is_inside(adj_pos):
+# 				if game.board[adj_pos[0], adj_pos[1]] == color:
+					
+# 			else:
+# 				count_mismatch += 1
+# 		else:
+# 			count_wall += 1
+# 	return count_match, count_mismatch, count_wall
+
 def count_liberties(game: Game, cluster: list, color: int):
 	# find all tiles adjacent to cluster
 	adj_tiles = []
@@ -47,15 +61,8 @@ def count_liberties(game: Game, cluster: list, color: int):
 	
 	return count_liberty, count_blocked
 
-def eval_move(game: Game, target_pos: list, tile: int, weights=[0, 0, 0, 0, 0, 0, 0]):
+def eval_move(game: Game, target_pos: list, tile: int):
 	color = game.tile_queue[tile]
 	cluster = game.get_connected_tiles(target_pos, color)
-	count_match, count_mismatch, count_wall = count_adj(game, target_pos, color)
-	count_liberty, count_blocked = count_liberties(game, cluster, color)
-	count_legal_moves_2 = count_legal_two_steps(game, target_pos)
-	features = [cluster, count_match, count_mismatch, count_wall, count_liberty, count_blocked, math.log(count_legal_moves_2 + 1)]
 	
-	return (
-		len(cluster)
-		+ 0.5 * math.log(count_legal_moves_2 + 1)
-	)
+	return len(cluster)

@@ -94,6 +94,9 @@ class Game:
 		# update stats
 		self.num_moves += 1
 
+		if len(con_list) >= self.cluster_size:
+			self.num_cleared += len(con_list)
+
 		return (start_pos, target_pos, tile, color, con_list)
 
 	def undo(self, move):
@@ -118,6 +121,9 @@ class Game:
 		
 		# remove tile from board
 		self.board[target_pos[0]][target_pos[1]] = 0
+
+		if len(con_list) >= self.cluster_size:
+			self.num_cleared -= len(con_list)
 
 	def is_inside(self, pos):
 		return pos[0] >= 0 and pos[0] < self.board_size[0] and pos[1] >= 0 and pos[1] < self.board_size[1]

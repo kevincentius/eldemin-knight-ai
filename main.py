@@ -9,68 +9,27 @@ from random import randint
 game = Game()
 game.board_size = [7, 7]
 game.start_pos = [3, 3]
-game.num_colors = 5
+game.num_colors = 6
 
 tree_search = TreeSearch()
 
-# Search Rules
-weights = [1, 0, 0, 0, 0, 0, 0]
-num_sims = 50
-
-# bug result [0.5208, 0.22800000000000012, -0.030800000000000056, -0.026399999999999972, -0.21080000000000013, -0.14820000000000008, 0.24639999999999995]
-
-test_change = 0.1
-change_rate = 0.002
-max_change = 0.05
-
-def simulate(weights):
-	num_moves = []
-	for e in range(num_sims):
-		game.reset()
-
-		for n_moves in range(1000):
-			best_move, best_tile, best_score, legal_moves = tree_search.find_best_move(game, weights, 1)
-
-			if len(legal_moves) > 0:
-				game.play(best_move, best_tile)
-
-			else:
-				break
-	
-		num_moves.append(game.num_moves)
-
-		# print('round: {}, avg: {:.2f}, moves: {}'.format(
-		# 	e, sum(num_moves) / len(num_moves), game.num_moves
-		# ))
-	
-	return sum(num_moves) / len(num_moves)
-
+num_moves = []
+e = 0
 while True:
-	feat_deltas = [0]
+	e += 1
+	game.reset()
 
-	# see performance of current weights
-	base_score = simulate(weights)
-	print('base score', base_score, 'weights', weights)
+	for n_moves in range(1000):
+		best_move, best_tile, best_score, legal_moves = tree_search.find_best_move(game, 3)
 
-	# try small changes in each feature
-	for i in range(1, len(weights)):
-		test_weight = weights.copy()
-		test_weight[i] += test_change
-		inc_score = simulate(test_weight)
+		if len(legal_moves) > 0:
+			game.play(best_move, best_tile)
 
-		test_weight[i] -= 2*test_change
-		dec_score = simulate(test_weight)
+		else:
+			break
 
-		# calculate feature update based on 'learning_rate' * 'gradient'
-		feat_delta = change_rate * (inc_score - dec_score)
-		if feat_delta < -max_change:
-			feat_delta = -max_change
-		elif feat_delta > max_change:
-			feat_delta = max_change
+	num_moves.append(game.num_moves)
 
-		feat_deltas.append(feat_delta)
-
-	# update weights
-	print('deltas', feat_deltas)
-	for i in range(1, len(weights)):
-		weights[i] += feat_deltas[i]
+	print('round: {}, avg: {:.2f}, moves: {}'.format(
+		e, sum(num_moves) / len(num_moves), game.num_moves
+	))
