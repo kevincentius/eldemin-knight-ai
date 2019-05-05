@@ -6,9 +6,12 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.clock import Clock
+from kivy.core.window import Window
 
 from game.game import Game
 from ai.tree_search import TreeSearch
+
+import functools
 
 game = Game()
 
@@ -39,14 +42,18 @@ class MainView(BoxLayout):
                 ]
     def __init__(self):
         super().__init__()
+
+        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)
+
+        global mv
+        mv = self
+
         self.buttons = []
         self.img_buttons = []
         self.float_buttons = []
         self.next_buttons = []
         self.build()
-
-        global mv
-        mv = self
 
     def build(self):
         for i in range(49):
@@ -54,6 +61,7 @@ class MainView(BoxLayout):
             self.buttons.append(button)
 
             img_button = Button(background_normal='')
+            img_button.on_press=functools.partial(click_tile, i)
             self.img_buttons.append(img_button)
 
             float_button = RelativeLayout()
@@ -67,6 +75,7 @@ class MainView(BoxLayout):
             next_button = Button(background_normal='', size_hint=(None,None), size=(50, 50))
             self.next_buttons.append(next_button)
             self.box_name.add_widget(next_button)
+            next_button.on_press=swap_tile
 
         self.update()
 
@@ -100,8 +109,31 @@ class MainView(BoxLayout):
     def make_pause(self):
         Clock.unschedule(clock_f)
 
+
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+        self._keyboard = None
+
+    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+        if keycode[0] == 32:
+            swap_tile()
+        return True
+
 def clock_f(dt):
     mv.make_move()
+
+def click_tile(i):
+    target_pos = [int(i/7), i%7]
+
+    if target_pos in game.get_legal_moves():
+        game.play(target_pos, 0)
+        mv.update()
+
+def swap_tile():
+    tmp = game.tile_queue[0]
+    game.tile_queue[0] = game.tile_queue[1]
+    game.tile_queue[1] = tmp
+    mv.update()
 
 class GameApp(App):
     def build(self):
