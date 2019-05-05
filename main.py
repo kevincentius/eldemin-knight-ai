@@ -20,7 +20,7 @@ while True:
 	game.reset()
 
 	for n_moves in range(1000):
-		best_move, best_tile, best_score, legal_moves = tree_search.find_best_move(game, 3)
+		best_move, best_tile, best_score, legal_moves = tree_search.find_best_move(game, 4)
 
 		if len(legal_moves) > 0:
 			game.play(best_move, best_tile)

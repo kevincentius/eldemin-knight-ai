@@ -6,6 +6,8 @@ from ai.move_eval import eval_move
 
 class TreeSearch:
 
+	move_weights = [1, 0.7, 0.49, 0.343]
+
 	# returns (targetPos, tile), score
 	def find_best_move(self, game: Game, depth: int, scores=[]):
 		legal_moves = game.get_legal_moves()
@@ -40,5 +42,9 @@ class TreeSearch:
 			return best_move, best_tile, best_score, legal_moves
 
 		else:
+			score = 0
+			for i in range(len(scores)):
+				score += scores[i] * self.move_weights[i]
+			
 			# run out of depth, calculate final score
-			return None, None, sum(scores), legal_moves
+			return None, None, score, legal_moves
